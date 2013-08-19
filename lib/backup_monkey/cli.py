@@ -23,7 +23,6 @@ from backup_monkey.exceptions import BackupMonkeyException
 from boto.utils import get_instance_metadata
 
 
-
 __all__ = ('run', )
 log = logging.getLogger(__name__)
 

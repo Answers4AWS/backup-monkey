@@ -27,6 +27,7 @@ class BackupMonkey(object):
     def __init__(self, region):
         self._region = region
         self._prefix = 'BACKUP_MONKEY'
+        self._snapshots_per_volume = 3
         
         log.info("Connecting to region %s", self._region)
         self._conn = ec2.connect_to_region(self._region)            
@@ -37,10 +38,7 @@ class BackupMonkey(object):
         
         log.info('Getting list of EBS volumes')
         volumes = self._conn.get_all_volumes()
-        for volume in volumes:
-            pp.pprint(vars(volume))
-            pp.pprint(vars(volume.attach_data))
-            
+        for volume in volumes:            
             description_parts = [self._prefix]
             description_parts.append(volume.id)
             if volume.attach_data.instance_id:
@@ -48,16 +46,15 @@ class BackupMonkey(object):
             if volume.attach_data.device:
                 description_parts.append(volume.attach_data.device)
             description = ' '.join(description_parts)
-            log.info('Creating snapshot: %s', description)
+            log.info('Creating snapshot of %s: %s', volume.id, description)
             volume.create_snapshot(description)
-            
-
         return True
 
 
     def remove_old_snapshots(self):
         log.info('Getting list of EBS snapshots')
         snapshots = self._conn.get_all_snapshots(owner='self')
+        vol_snap_map = {}
         for snapshot in snapshots:
             if not snapshot.description.startswith(self._prefix):
                 log.debug('Skipping %s as prefix does not match', snapshot.id)
@@ -67,7 +64,18 @@ class BackupMonkey(object):
                 continue
             
             log.debug('Found %s: %s', snapshot.id, snapshot.description)
-            #pp.pprint(vars(snapshot))
+            vol_snap_map.setdefault(snapshot.volume_id, []).append(snapshot)
+            
+        for volume_id, most_recent_snapshots in vol_snap_map.iteritems():
+            most_recent_snapshots.sort(key=lambda s: s.start_time, reverse=True)
+            num_snapshots = len(most_recent_snapshots)
+            log.info('Found %d snapshots for %s', num_snapshots, volume_id)
+
+            for i in range(self._snapshots_per_volume, num_snapshots):
+                snapshot = most_recent_snapshots[i]
+                log.info(' Deleting %s: %s', snapshot.id, snapshot.description)
+                snapshot.delete()
+        return True
 
 
 class Logging(object):
