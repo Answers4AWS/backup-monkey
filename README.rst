@@ -3,7 +3,7 @@ Backup Monkey
 
 A monkey that makes sure you have a backup of your EBS volumes in case something goes wrong. 
 
-It is designed specifically for Amazon Web Services (AWS), and using Python and Boto.
+It is designed specifically for Amazon Web Services (AWS), and uses Python and Boto.
 
 This script is designed to be run on a schedule, probably by CRON. 
 
@@ -76,8 +76,8 @@ About Answers for AWS
 
 This code was written by `Peter
 Sankauskas <https://twitter.com/pas256>`__, founder of `Answers for
-AWS <http://answersforaws.com/>`__ - a company focused on helping business learn
-how to use AWS, without doing it the hard way. If you are looking for help
+AWS <http://answersforaws.com/>`__ - a company focused on helping businesses
+learn how to use AWS, without doing it the hard way. If you are looking for help
 with AWS, please `contact us <http://answersforaws.com/contact/>`__.
 
 
