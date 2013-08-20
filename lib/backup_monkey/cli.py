@@ -36,6 +36,8 @@ def run():
     parser = argparse.ArgumentParser(description='Loops through all EBS volumes, and snapshots them, then loops through all snapshots, and removes the oldest ones.')
     parser.add_argument('--region', metavar='REGION', 
                         help='the region to loop through and snapshot (default is current region of EC2 instance this is running on). E.g. us-east-1')
+    parser.add_argument('--max-snapshots-per-volume', metavar='SNAPSHOTS', default=3, type=int,
+                        help='the maximum number of snapshots to keep per EBS volume. The oldest snapshots will be deleted. Default: 3')
     parser.add_argument('--snapshot-only', action='store_true', default=False,
                         help='Only snapshot EBS volumes, do not remove old snapshots')
     parser.add_argument('--remove-only', action='store_true', default=False,
@@ -65,7 +67,7 @@ def run():
         log.debug("Running in region: %s", region)
 
     try:
-        monkey = BackupMonkey(region)
+        monkey = BackupMonkey(region, args.max_snapshots_per_volume)
         
         if not args.remove_only:
             monkey.snapshot_volumes()

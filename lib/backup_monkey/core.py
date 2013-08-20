@@ -24,10 +24,10 @@ log = logging.getLogger(__name__)
 
 
 class BackupMonkey(object):
-    def __init__(self, region):
+    def __init__(self, region, max_snapshots_per_volume):
         self._region = region
         self._prefix = 'BACKUP_MONKEY'
-        self._snapshots_per_volume = 3
+        self._snapshots_per_volume = max_snapshots_per_volume
         
         log.info("Connecting to region %s", self._region)
         self._conn = ec2.connect_to_region(self._region)            
