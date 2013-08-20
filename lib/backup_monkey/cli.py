@@ -33,7 +33,7 @@ def _fail(message="Unknown failure", code=1):
 
 
 def run():
-    parser = argparse.ArgumentParser(description='Loops through all EBS volumes, and snapshots them, then loops through all snapshots, and removes old ones')
+    parser = argparse.ArgumentParser(description='Loops through all EBS volumes, and snapshots them, then loops through all snapshots, and removes the oldest ones.')
     parser.add_argument('--region', metavar='REGION', 
                         help='the region to loop through and snapshot (default is current region of EC2 instance this is running on). E.g. us-east-1')
     parser.add_argument('--snapshot-only', action='store_true', default=False,

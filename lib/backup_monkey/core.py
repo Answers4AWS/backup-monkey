@@ -38,6 +38,7 @@ class BackupMonkey(object):
         
         log.info('Getting list of EBS volumes')
         volumes = self._conn.get_all_volumes()
+        log.info('Found %d volumes', len(volumes))
         for volume in volumes:            
             description_parts = [self._prefix]
             description_parts.append(volume.id)
@@ -52,8 +53,13 @@ class BackupMonkey(object):
 
 
     def remove_old_snapshots(self):
+        ''' Loop through this account's snapshots, and remove the oldest ones
+        where there are more snapshots per volume than required '''
+        
+        log.info('Configured to keep %d snapshots per volume', self._snapshots_per_volume)
         log.info('Getting list of EBS snapshots')
         snapshots = self._conn.get_all_snapshots(owner='self')
+        log.info('Found %d snapshots', len(snapshots))
         vol_snap_map = {}
         for snapshot in snapshots:
             if not snapshot.description.startswith(self._prefix):
@@ -76,6 +82,7 @@ class BackupMonkey(object):
                 log.info(' Deleting %s: %s', snapshot.id, snapshot.description)
                 snapshot.delete()
         return True
+
 
 
 class Logging(object):
