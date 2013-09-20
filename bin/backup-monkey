@@ -20,7 +20,7 @@ This script runs the Backup Monkey service
 """
 
 import sys, os
-sys.path.insert(0, os.path.abspath('../lib'))
+sys.path.insert(0, os.path.abspath('..'))
 
 from backup_monkey import cli
 
