@@ -75,6 +75,14 @@ snapshots, which can cost you money. There really are no warranties or
 guarantees. For costs, refer to http://aws.amazon.com/ec2/pricing/
 
 
+Source Code
+-----------
+
+The Python source code for Backup Monkey is available on GitHub:
+
+https://github.com/Answers4AWS/backup-monkey
+
+
 About Answers for AWS
 ---------------------
 
