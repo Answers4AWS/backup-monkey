@@ -66,6 +66,14 @@ You can install Backup Monkey using the usual PyPI channels. Example:
     
 You can find the package details here: https://pypi.python.org/pypi/backup_monkey
 
+Alternatively, if you prefer to install from source:
+
+::
+
+    git clone git@github.com:Answers4AWS/backup-monkey.git
+    cd backup-monkey
+    python setup.py install
+
 
 Warning
 -------
