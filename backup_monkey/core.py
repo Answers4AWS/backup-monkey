@@ -33,7 +33,9 @@ class BackupMonkey(object):
         try:
             self._conn = ec2.connect_to_region(self._region)
         except boto.exception.NoAuthHandlerFound:
-            raise BackupMonkeyException('No AWS credentials found - check your credentials')            
+            log.error('Could not connect to region %s' % self._ami_region)
+            log.critical('No AWS credentials found. To configure Boto, please read: http://boto.readthedocs.org/en/latest/boto_config_tut.html')
+            raise BackupMonkeyException('No AWS credentials found')            
 
     
     def snapshot_volumes(self):
