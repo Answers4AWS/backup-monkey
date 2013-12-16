@@ -80,8 +80,8 @@ Configuration
 
 This project uses `Boto <http://boto.readthedocs.org/en/latest/index.html>`__ to
 call the AWS APIs. You can pass your AWS credentials to Boto can by using a
-`.boto` file, IAM Roles or environment variables. Full information can be found
-here:
+:code:`.boto` file, IAM Roles or environment variables. Full information can be
+found here:
 
 http://boto.readthedocs.org/en/latest/boto_config_tut.html
 
