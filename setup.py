@@ -19,8 +19,8 @@ setuptools install script for Backup Monkey
 
 import sys
 major, minor = sys.version_info[0:2]
-if major != 2 or minor < 7:
-    print 'Backup Monkey requires Python 2.7.x'
+if major != 2 or minor < 6:
+    print 'Backup Monkey requires Python 2.6.x'
     sys.exit(1)
 
 from setuptools import setup, find_packages
@@ -40,11 +40,16 @@ exclude_packages = [
     'tests',
     'tests.*',
 ]
+
+def readme():
+    with open("README.rst") as f:
+        return f.read()
+
 setup(
     name='backup_monkey',
     version=backup_monkey.__version__,
     description='A service that makes sure you have snapshots of all your EBS volumes',
-    long_description=open('README.rst').read(),
+    long_description = readme(),
     author=backup_monkey.__author__,
     author_email='info@answersforaws.com',
     url='https://github.com/Answers4AWS/backup-monkey',
@@ -54,7 +59,7 @@ setup(
     zip_safe=False,
     install_requires=requires,
     entry_points=entry_points,
-    license=open("LICENSE.txt").read(),
+    license='Apache Software License',
     classifiers=(
         'Development Status :: 4 - Beta',
         'Environment :: Console',
@@ -63,8 +68,13 @@ setup(
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 2.6',
         'Topic :: System :: Installation/Setup',
         'Topic :: Utilities',
-    )
+    ),
+    options = {
+        'bdist_rpm': {
+            'post_install' : 'post_install.sh',
+        }
+    }
 )

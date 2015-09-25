@@ -19,6 +19,9 @@ Usage
     usage: backup-monkey [-h] [--region REGION]
                          [--max-snapshots-per-volume SNAPSHOTS] [--snapshot-only]
                          [--remove-only] [--verbose] [--version]
+                         [--tags TAGS [TAGS ...]] [--reverse-tags]
+                         [--cross-account-number CROSS_ACCOUNT_NUMBER]
+                         [--cross-account-role CROSS_ACCOUNT_ROLE]
 
     Loops through all EBS volumes, and snapshots them, then loops through all
     snapshots, and removes the oldest ones.
@@ -36,8 +39,19 @@ Usage
       --remove-only         Only remove old snapshots, do not create new snapshots
       --verbose, -v         enable verbose output (-vvv for more)
       --version             display version number and exit
-      
-      
+      --tags TAGS [TAGS ...]Only snapshot instances that match passed in tags.
+                            E.g. --tag Name:foo will snapshot all instances that
+                            do not have a `Name` tag with the value `foo`
+      --reverse-tags        Do a reverse match on the passed in tags. E.g. --tag
+                            Name:foo --reverse-tags will snapshot all instances
+                            that do not have a `Name` tag with the value `foo`
+      --cross-account-number CROSS_ACCOUNT_NUMBER
+                            Do a cross-account snapshot. Requires that you pass in
+                            the --cross-account-role parameter
+      --cross-account-role CROSS_ACCOUNT_ROLE
+                            The role backup-monkey will assume when doing a cross-
+                            account snapshot
+
 
 Examples
 --------
