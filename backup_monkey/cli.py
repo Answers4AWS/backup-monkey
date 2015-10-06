@@ -48,9 +48,9 @@ def run():
     parser.add_argument('--reverse-tags', action='store_true', default=False,
                         help='Do a reverse match on the passed in tags. E.g. --tag Name:foo --reverse-tags will snapshot all instances that do not have a `Name` tag with the value `foo`')
     parser.add_argument('--cross-account-number', action='store',
-                        help='Do a cross-account snapshot. Requires that you pass in the --cross-account-role parameter')
+                        help='Do a cross-account snapshot (this is the account number to do snapshots on). NOTE: This requires that you pass in the --cross-account-role parameter. E.g. --cross-account-number 111111111111 --cross-account-role Snapshot')
     parser.add_argument('--cross-account-role', action='store',
-                        help='The role backup-monkey will assume when doing a cross-account snapshot')
+                        help='The name of the role that backup-monkey will assume when doing a cross-account snapshot. E.g. --cross-account-role Snapshot')
 
     args = parser.parse_args()
 

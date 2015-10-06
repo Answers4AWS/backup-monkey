@@ -33,25 +33,29 @@ Usage
                             E.g. us-east-1
       --max-snapshots-per-volume SNAPSHOTS
                             the maximum number of snapshots to keep per EBS
-                            volume. The oldest snapshots will be deleted. 
-                            Default: 3
+                            volume. The oldest snapshots will be deleted. Default:
+                            3
       --snapshot-only       Only snapshot EBS volumes, do not remove old snapshots
       --remove-only         Only remove old snapshots, do not create new snapshots
       --verbose, -v         enable verbose output (-vvv for more)
       --version             display version number and exit
-      --tags TAGS [TAGS ...]Only snapshot instances that match passed in tags.
-                            E.g. --tag Name:foo will snapshot all instances that
-                            do not have a `Name` tag with the value `foo`
+      --tags TAGS [TAGS ...]
+                            Only snapshot instances that match passed in tags.
+                            E.g. --tag Name:foo will snapshot all instances with a
+                            tag `Name` and value is `foo`
       --reverse-tags        Do a reverse match on the passed in tags. E.g. --tag
                             Name:foo --reverse-tags will snapshot all instances
                             that do not have a `Name` tag with the value `foo`
       --cross-account-number CROSS_ACCOUNT_NUMBER
-                            Do a cross-account snapshot. Requires that you pass in
-                            the --cross-account-role parameter
+                            Do a cross-account snapshot (this is the account
+                            number to do snapshots on). NOTE: This requires that
+                            you pass in the --cross-account-role parameter. E.g.
+                            --cross-account-number 111111111111 --cross-account-
+                            role Snapshot
       --cross-account-role CROSS_ACCOUNT_ROLE
-                            The role backup-monkey will assume when doing a cross-
-                            account snapshot
-
+                            The name of the role that backup-monkey will assume
+                            when doing a cross-account snapshot. E.g. --cross-
+                            account-role Snapshot
 
 Examples
 --------
