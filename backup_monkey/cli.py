@@ -22,15 +22,12 @@ from backup_monkey.exceptions import BackupMonkeyException
 
 from boto.utils import get_instance_metadata
 
-
 __all__ = ('run', )
 log = logging.getLogger(__name__)
-
 
 def _fail(message="Unknown failure", code=1):
     log.error(message)
     sys.exit(code)
-
 
 def run():
     parser = argparse.ArgumentParser(description='Loops through all EBS volumes, and snapshots them, then loops through all snapshots, and removes the oldest ones.')
@@ -46,8 +43,26 @@ def run():
                         help='enable verbose output (-vvv for more)')
     parser.add_argument('--version', action='version', version='%(prog)s ' + __version__,
                         help='display version number and exit')
+    parser.add_argument('--tags', nargs="+", 
+                        help='Only snapshot instances that match passed in tags. E.g. --tag Name:foo will snapshot all instances with a tag `Name` and value is `foo`')
+    parser.add_argument('--reverse-tags', action='store_true', default=False,
+                        help='Do a reverse match on the passed in tags. E.g. --tag Name:foo --reverse-tags will snapshot all instances that do not have a `Name` tag with the value `foo`')
+    parser.add_argument('--cross-account-number', action='store',
+                        help='Do a cross-account snapshot (this is the account number to do snapshots on). NOTE: This requires that you pass in the --cross-account-role parameter. E.g. --cross-account-number 111111111111 --cross-account-role Snapshot')
+    parser.add_argument('--cross-account-role', action='store',
+                        help='The name of the role that backup-monkey will assume when doing a cross-account snapshot. E.g. --cross-account-role Snapshot')
+
     args = parser.parse_args()
-    
+
+    if args.cross_account_number and not args.cross_account_role:
+        parser.error('The --cross-account-role parameter is required if you specify --cross-account-number (doing a cross-account snapshot)')
+
+    if args.cross_account_role and not args.cross_account_number:
+        parser.error('The --cross-account-number parameter is required if you specify --cross-account-role (doing a cross-account snapshot)')
+
+    if args.reverse_tags and not args.tags:
+        parser.error('The --tags parameter is required if you specify --reverse-tags (doing a blacklist filter)')
+
     Logging().configure(args.verbose)
 
     log.debug("CLI parse args: %s", args)
@@ -67,7 +82,7 @@ def run():
         log.debug("Running in region: %s", region)
 
     try:
-        monkey = BackupMonkey(region, args.max_snapshots_per_volume)
+        monkey = BackupMonkey(region, args.max_snapshots_per_volume, args.tags, args.reverse_tags, args.cross_account_number, args.cross_account_role)
         
         if not args.remove_only:
             monkey.snapshot_volumes()
@@ -79,4 +94,3 @@ def run():
     
     log.info('Backup Monkey completed successfully!')
     sys.exit(0)
-    

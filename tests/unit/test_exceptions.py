@@ -12,14 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
+from unittest import TestCase
 
 from backup_monkey.exceptions import * 
 
-class ExceptionTests(unittest.TestCase):
+class ExceptionTests(TestCase):
     def test_new_exception(self):
         e = BackupMonkeyException()
-        self.assertIsInstance(e, BackupMonkeyException)
+        self.assertTrue(isinstance(e, BackupMonkeyException))
+        #self.assertIsInstance(e, BackupMonkeyException)
 
     def raise_BackupMonkeyException(self):
         raise BackupMonkeyException('msg')
