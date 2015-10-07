@@ -38,7 +38,7 @@ class BackupMonkey(object):
             from boto.sts import STSConnection
             import boto
             try:
-                role_arn = 'arn:aws:iam::%s:role/%s' % (cross_account_number, cross_account_role)
+                role_arn = 'arn:aws:iam::%s:role/%s' % (self._cross_account_number, self._cross_account_role)
                 sts = STSConnection()
                 assumed_role = sts.assume_role(role_arn=role_arn, role_session_name='AssumeRoleSession')
                 ret = ec2.connect_to_region(
