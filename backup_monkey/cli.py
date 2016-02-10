@@ -24,6 +24,8 @@ from boto.utils import get_instance_metadata
 
 __all__ = ('run', )
 log = logging.getLogger(__name__)
+LIMIT_SCHEDULED = 32 # Scheduled is added to description when created snapshot.
+                     # The description limit in aws is 255
 
 def _fail(message="Unknown failure", code=1):
     log.error(message)
@@ -47,6 +49,8 @@ def run():
                         help='Only snapshot instances that match passed in tags. E.g. --tag Name:foo will snapshot all instances with a tag `Name` and value is `foo`')
     parser.add_argument('--reverse-tags', action='store_true', default=False,
                         help='Do a reverse match on the passed in tags. E.g. --tag Name:foo --reverse-tags will snapshot all instances that do not have a `Name` tag with the value `foo`')
+    parser.add_argument('--scheduled', action='store',
+                        help='Only snapshot instances that match passed in scheduled are created or deleted. Default: None. Selected all snapshot. You have the posibility of create a different strategies for daily, weekly and monthly for example. Scheduled daily won\'t deleted scheduled weekly')
     parser.add_argument('--cross-account-number', action='store',
                         help='Do a cross-account snapshot (this is the account number to do snapshots on). NOTE: This requires that you pass in the --cross-account-role parameter. E.g. --cross-account-number 111111111111 --cross-account-role Snapshot')
     parser.add_argument('--cross-account-role', action='store',
@@ -62,6 +66,9 @@ def run():
 
     if args.reverse_tags and not args.tags:
         parser.error('The --tags parameter is required if you specify --reverse-tags (doing a blacklist filter)')
+
+    if args.scheduled and len(args.scheduled) > LIMIT_SCHEDULED:
+        parser.error('The --scheduled parameter lenght should be less than 32')
 
     Logging().configure(args.verbose)
 
@@ -82,7 +89,13 @@ def run():
         log.debug("Running in region: %s", region)
 
     try:
-        monkey = BackupMonkey(region, args.max_snapshots_per_volume, args.tags, args.reverse_tags, args.cross_account_number, args.cross_account_role)
+        monkey = BackupMonkey(region,
+                              args.max_snapshots_per_volume,
+                              args.tags,
+                              args.reverse_tags,
+                              args.scheduled,
+                              args.cross_account_number,
+                              args.cross_account_role)
         
         if not args.remove_only:
             monkey.snapshot_volumes()

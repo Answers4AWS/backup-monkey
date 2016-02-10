@@ -20,6 +20,7 @@ Usage
                          [--max-snapshots-per-volume SNAPSHOTS] [--snapshot-only]
                          [--remove-only] [--verbose] [--version]
                          [--tags TAGS [TAGS ...]] [--reverse-tags]
+                         [--scheduled SCHEDULED]
                          [--cross-account-number CROSS_ACCOUNT_NUMBER]
                          [--cross-account-role CROSS_ACCOUNT_ROLE]
 
@@ -46,6 +47,12 @@ Usage
       --reverse-tags        Do a reverse match on the passed in tags. E.g. --tag
                             Name:foo --reverse-tags will snapshot all instances
                             that do not have a `Name` tag with the value `foo`
+      --scheduled           SCHEDULED
+                            Only snapshot instances that match passed in scheduled
+                            are created or deleted. Default: None.  Selected all
+                            snapshot. You have the posibility of create a different
+                            strategies for daily, weekly and monthly for example.
+                            Scheduled daily won't deleted scheduled weekly
       --cross-account-number CROSS_ACCOUNT_NUMBER
                             Do a cross-account snapshot (this is the account
                             number to do snapshots on). NOTE: This requires that
@@ -102,6 +109,15 @@ call the AWS APIs. You can pass your AWS credentials to Boto can by using a
 found here:
 
 http://boto.readthedocs.org/en/latest/boto_config_tut.html
+
+
+Run test
+--------
+
+::
+
+    python -m unittest -v tests.unit.test_exceptions
+    python -m unittest -v tests.unit.test_tags
 
 
 Warning
