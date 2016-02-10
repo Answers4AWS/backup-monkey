@@ -22,11 +22,11 @@ __all__ = ('BackupMonkey', 'Logging')
 log = logging.getLogger(__name__)
 
 class BackupMonkey(object):
-    def __init__(self, region, max_snapshots_per_volume, tags, reverse_tags, scheduled, cross_account_number, cross_account_role):
+    def __init__(self, region, max_snapshots_per_volume, tags, reverse_tags, label, cross_account_number, cross_account_role):
         self._region = region
         self._prefix = 'BACKUP_MONKEY'
-        if scheduled:
-            self._prefix += ' ' + scheduled
+        if label:
+            self._prefix += ' ' + label
         self._snapshots_per_volume = max_snapshots_per_volume
         self._tags = tags
         self._reverse_tags = reverse_tags

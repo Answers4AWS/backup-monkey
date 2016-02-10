@@ -20,7 +20,7 @@ Usage
                          [--max-snapshots-per-volume SNAPSHOTS] [--snapshot-only]
                          [--remove-only] [--verbose] [--version]
                          [--tags TAGS [TAGS ...]] [--reverse-tags]
-                         [--scheduled SCHEDULED]
+                         [--label LABEL]
                          [--cross-account-number CROSS_ACCOUNT_NUMBER]
                          [--cross-account-role CROSS_ACCOUNT_ROLE]
 
@@ -47,12 +47,15 @@ Usage
       --reverse-tags        Do a reverse match on the passed in tags. E.g. --tag
                             Name:foo --reverse-tags will snapshot all instances
                             that do not have a `Name` tag with the value `foo`
-      --scheduled           SCHEDULED
-                            Only snapshot instances that match passed in scheduled
+      --label           LABEL
+                            Only snapshot instances that match passed in label
                             are created or deleted. Default: None.  Selected all
                             snapshot. You have the posibility of create a different
                             strategies for daily, weekly and monthly for example.
-                            Scheduled daily won't deleted scheduled weekly
+                            Label daily won't deleted label weekly. E.g.
+                              backup-monkey --max-snapshots-per-volume 6 --label daily
+                              backup-monkey --max-snapshots-per-volume 4 --label weekly
+                            You save 6 + 4 snapshots max. instead 4 or 6
       --cross-account-number CROSS_ACCOUNT_NUMBER
                             Do a cross-account snapshot (this is the account
                             number to do snapshots on). NOTE: This requires that

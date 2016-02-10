@@ -137,16 +137,16 @@ class TagsTest(TestCase):
         assert len(ret) == 4
         assert ret == [a, match_tag_or_1, b, match_tag_or_2]
 
-class ScheduledTest(TestCase):
+class LabelTest(TestCase):
 
     @mock.patch('backup_monkey.core.BackupMonkey.get_connection', side_effect=mock_get_connection)
     def setUp(self, mock):
         self.bm = BackupMonkey('us-west-2', 1, [], None, None, None, None)
-        self.bm_with_scheduled_daily = BackupMonkey('us-west-2', 1, [], None, 'daily', None, None)
-        self.bm_with_scheduled_weekly = BackupMonkey('us-west-2', 1, [], None, 'weekly', None, None)
+        self.bm_with_label_daily = BackupMonkey('us-west-2', 1, [], None, 'daily', None, None)
+        self.bm_with_label_weekly = BackupMonkey('us-west-2', 1, [], None, 'weekly', None, None)
 
     @mock.patch('backup_monkey.core.BackupMonkey.get_connection', side_effect=mock_get_connection)
-    def test_without_scheduled(self, mock):
+    def test_without_label(self, mock):
         snaps = self.bm._conn.get_all_snapshots()
         init_snapshot = filter(lambda x: x.status == 'completed', snaps)
         self.bm.remove_old_snapshots()
@@ -156,21 +156,21 @@ class ScheduledTest(TestCase):
         assert len(end_snapshot) == 2
 
     @mock.patch('backup_monkey.core.BackupMonkey.get_connection', side_effect=mock_get_connection)
-    def test_with_scheduled_daily(self, mock):
-        snaps = self.bm_with_scheduled_daily._conn.get_all_snapshots()
+    def test_with_label_daily(self, mock):
+        snaps = self.bm_with_label_daily._conn.get_all_snapshots()
         init_snapshot = filter(lambda x: x.status == 'completed', snaps)
-        self.bm_with_scheduled_daily.remove_old_snapshots()
-        snaps = self.bm_with_scheduled_daily._conn.get_all_snapshots()
+        self.bm_with_label_daily.remove_old_snapshots()
+        snaps = self.bm_with_label_daily._conn.get_all_snapshots()
         end_snapshot = filter(lambda x: x.status == 'completed', snaps)
         assert len(init_snapshot) == 4
         assert len(end_snapshot) == 4
 
     @mock.patch('backup_monkey.core.BackupMonkey.get_connection', side_effect=mock_get_connection)
-    def test_with_scheduled_weekly(self, mock):
-        snaps = self.bm_with_scheduled_weekly._conn.get_all_snapshots()
+    def test_with_label_weekly(self, mock):
+        snaps = self.bm_with_label_weekly._conn.get_all_snapshots()
         init_snapshot = filter(lambda x: x.status == 'completed', snaps)
-        self.bm_with_scheduled_weekly.remove_old_snapshots()
-        snaps = self.bm_with_scheduled_weekly._conn.get_all_snapshots()
+        self.bm_with_label_weekly.remove_old_snapshots()
+        snaps = self.bm_with_label_weekly._conn.get_all_snapshots()
         end_snapshot = filter(lambda x: x.status == 'completed', snaps)
         assert len(init_snapshot) == 4
         assert len(end_snapshot) == 3
